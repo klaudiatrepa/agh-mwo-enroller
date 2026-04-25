@@ -7,6 +7,7 @@ import org.hibernate.query.Query;
 import org.springframework.stereotype.Component;
 
 import com.company.enroller.model.Meeting;
+import com.company.enroller.model.Participant;
 
 @Component("meetingService")
 public class MeetingService {
@@ -57,6 +58,24 @@ public class MeetingService {
   public void updateMeeting(Meeting meeting) {
     Session session = connector.getSession();
     session.beginTransaction();
+    session.update(meeting);
+    session.getTransaction().commit();
+  }
+
+  public void addParticipants(Meeting meeting, Collection<Participant> participants){
+    Session session = connector.getSession();
+    session.beginTransaction();
+    for (Participant participant : participants) {
+      meeting.addParticipant(participant);
+    }
+    session.update(meeting);
+    session.getTransaction().commit();
+  }
+
+  public void deleteParticipantFromMeeting(Meeting meeting, Participant participant){
+    Session session = connector.getSession();
+    session.beginTransaction();
+    meeting.removeParticipant(participant);
     session.update(meeting);
     session.getTransaction().commit();
   }
